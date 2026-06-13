@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel Runner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main class="page">
+
+    <section id="menuScreen" class="screen active">
+      <div class="menu-panel">
+        <h1>Pixel Runner</h1>
+        <p class="subtitle">Corra, pule obstáculos e faça a maior pontuação possível!</p>
+
+        <button id="adminButton" class="admin-button" type="button">ADM</button>
+
+        <div id="adminPanel" class="admin-panel">
+          <div class="admin-row">
+            <input id="adminCodeInput" type="password" placeholder="Código ADM">
+            <button id="adminEnterButton" type="button">Entrar</button>
+          </div>
+
+          <p id="adminStatus" class="admin-status">Digite o código para liberar o modo ADM.</p>
+
+          <div id="adminControls" class="admin-controls">
+            <label for="adminStartScore">Pontuação inicial:</label>
+            <input id="adminStartScore" type="number" min="0" step="1000" value="0">
+          </div>
+        </div>
+
+        <div class="menu-grid">
+          <div class="card">
+            <h2>Escolha a skin</h2>
+
+            <div class="skins">
+              <button class="skin-card selected" data-skin="default">
+                <img src="assets/dino-default-1.png" alt="Skin padrão" onerror="this.style.display='none'">
+                <span>Tiranossauro</span>
+                <span class="lock-tag"></span>
+              </button>
+
+              <button class="skin-card" data-skin="skin1">
+                <img src="assets/dino-skin1-1.png" alt="Skin raptor" onerror="this.style.display='none'">
+                <span>Raptor</span>
+                <span class="lock-tag">10k pts</span>
+              </button>
+
+              <button class="skin-card" data-skin="skin2">
+                <img src="assets/dino-skin2-1.png" alt="Skin carnotauro" onerror="this.style.display='none'">
+                <span>Carnotauro</span>
+                <span class="lock-tag">20k pts</span>
+              </button>
+
+              <button class="skin-card" data-skin="skin3">
+                <img src="assets/dino-skin3-1.png" alt="Skin pterossauro" onerror="this.style.display='none'">
+                <span>Pterossauro</span>
+                <span class="lock-tag">30k pts</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Histórico</h2>
+            <p>Recorde: <strong id="menuBestScore">0</strong></p>
+
+            <div class="history-scroll">
+              <ol id="historyList" class="history-list">
+                <li>Nenhuma rodada ainda</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <button id="playButton" class="play-button">Jogar</button>
+
+        <p class="controls">
+          Controles: <strong>Espaço</strong>, <strong>Seta para cima</strong> ou clique/toque na tela.
+        </p>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="hud">
+        <div>Atual: <strong id="currentScore">0</strong></div>
+        <div>Recorde: <strong id="bestScore">0</strong></div>
+      </div>
+
+      <div id="gameArea" class="game-area">
+        <div id="startMessage" class="start-message">Corra!</div>
+
+        <div id="dino" class="dino">
+          <img id="dinoImage" src="assets/dino-default-1.png" alt="personagem">
+        </div>
+
+        <div id="obstacles"></div>
+
+        <div id="ground" class="ground"></div>
+      </div>
+    </section>
+
+    <div id="endModal" class="end-modal">
+      <div class="end-box">
+        <h2 id="endTitle">Fim de jogo</h2>
+        <p id="endText">Você fez 0 pontos.</p>
+
+        <div class="end-actions">
+          <button id="restartButton">Jogar de novo</button>
+          <button id="backMenuButton">Voltar ao menu</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

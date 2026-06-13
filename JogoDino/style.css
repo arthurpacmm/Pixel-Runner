@@ -1,0 +1,720 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --dark: #111;
+  --black: #050505;
+  --white: #f8f8f8;
+  --green: #39b54a;
+  --green-dark: #176b2c;
+  --gray: #2b2f36;
+  --gray-light: #e8e8e8;
+  --border: #0b0b0b;
+
+  --ground-height: 28px;
+  --dino-bottom: 10px;
+  --obstacle-bottom: 6px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, #30343b 0%, #15171b 45%, #08090b 100%);
+  color: #222;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.page {
+  width: min(960px, 94vw);
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* ========================= */
+/* MENU */
+/* ========================= */
+
+.menu-panel {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, #f8f8f8 0%, #e6e6e6 100%);
+  border: 5px solid var(--border);
+  border-radius: 28px;
+  padding: 34px;
+  text-align: center;
+  box-shadow:
+    0 16px 0 #000,
+    0 0 40px rgba(0, 0, 0, 0.45);
+}
+
+.menu-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 18px 18px;
+  pointer-events: none;
+}
+
+.menu-panel::after {
+  content: "";
+  position: absolute;
+  left: -80px;
+  top: -80px;
+  width: 220px;
+  height: 220px;
+  background: rgba(57, 181, 74, 0.18);
+  border-radius: 50%;
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+h1 {
+  position: relative;
+  margin: 0;
+  font-size: 50px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #111;
+  text-shadow:
+    3px 3px 0 #cfcfcf,
+    5px 5px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.subtitle {
+  position: relative;
+  margin-top: 10px;
+  color: #555;
+  font-weight: 700;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.menu-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  margin-top: 32px;
+  z-index: 1;
+}
+
+.card {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #eeeeee 100%);
+  border: 4px solid #111;
+  border-radius: 22px;
+  padding: 20px;
+  text-align: left;
+  box-shadow:
+    inset 0 -6px 0 rgba(0,0,0,0.08),
+    0 7px 0 #111;
+}
+
+.card h2 {
+  margin: 0 0 16px;
+  font-size: 22px;
+  color: #111;
+  border-bottom: 3px solid #111;
+  padding-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.skins {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.skin-card {
+  height: 126px;
+  border: 4px solid #111;
+  background:
+    linear-gradient(180deg, #f7f7f7 0%, #dcdcdc 100%);
+  border-radius: 18px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 900;
+  position: relative;
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+  box-shadow: 0 5px 0 #111;
+}
+
+.skin-card:hover:not(.locked) {
+  transform: translateY(-3px);
+  background:
+    linear-gradient(180deg, #ffffff 0%, #d8ffd9 100%);
+  box-shadow: 0 8px 0 #111;
+}
+
+.skin-card:active:not(.locked) {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #111;
+}
+
+.skin-card img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.skin-card.selected {
+  background:
+    linear-gradient(180deg, #d9ffd9 0%, #9be89f 100%);
+  outline: 4px solid #2b8a3e;
+  box-shadow:
+    0 5px 0 #111,
+    0 0 0 5px rgba(43, 138, 62, 0.25);
+}
+
+.skin-card.locked {
+  background:
+    linear-gradient(180deg, #dedede 0%, #bdbdbd 100%);
+  opacity: 0.65;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.lock-tag {
+  font-size: 11px;
+  background: #ffdad6;
+  color: #9b1c1c;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 2px solid #111;
+  font-weight: 900;
+}
+
+/* ========================= */
+/* MODO ADM */
+/* ========================= */
+
+.admin-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  border: 3px solid #111;
+  border-radius: 12px;
+  background: #222;
+  color: #fff;
+  font-weight: 900;
+  padding: 8px 13px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #000;
+}
+
+.admin-button:hover {
+  filter: brightness(1.15);
+}
+
+.admin-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #000;
+}
+
+.admin-button.active {
+  background:
+    linear-gradient(180deg, #b35cff 0%, #6d24a8 100%);
+}
+
+.admin-panel {
+  display: none;
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  z-index: 4;
+  width: min(310px, calc(100% - 32px));
+  background:
+    linear-gradient(180deg, #ffffff 0%, #eeeeee 100%);
+  border: 4px solid #111;
+  border-radius: 18px;
+  padding: 14px;
+  text-align: left;
+  box-shadow:
+    0 7px 0 #111,
+    0 0 25px rgba(0,0,0,0.35);
+}
+
+.admin-panel.active {
+  display: block;
+}
+
+.admin-row {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-row input,
+.admin-controls input {
+  width: 100%;
+  border: 3px solid #111;
+  border-radius: 10px;
+  padding: 9px;
+  font-weight: 800;
+  outline: none;
+}
+
+.admin-row button {
+  border: 3px solid #111;
+  border-radius: 10px;
+  background: #52d968;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 8px 12px;
+  box-shadow: 0 3px 0 #111;
+}
+
+.admin-status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #444;
+}
+
+.admin-controls {
+  display: none;
+  margin-top: 12px;
+}
+
+.admin-controls.active {
+  display: block;
+}
+
+.admin-controls label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 900;
+  color: #111;
+}
+
+/* ========================= */
+/* HISTÓRICO */
+/* ========================= */
+
+.history-scroll {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.history-scroll::-webkit-scrollbar {
+  width: 9px;
+}
+
+.history-scroll::-webkit-scrollbar-track {
+  background: #dcdcdc;
+  border-radius: 20px;
+  border: 2px solid #111;
+}
+
+.history-scroll::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 20px;
+  border: 2px solid #dcdcdc;
+}
+
+.history-scroll::-webkit-scrollbar-thumb:hover {
+  background: #111;
+}
+
+.history-list {
+  padding-left: 22px;
+  margin: 0;
+}
+
+.history-list li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #333;
+}
+
+/* ========================= */
+/* BOTÃO PLAY */
+/* ========================= */
+
+.play-button {
+  position: relative;
+  z-index: 1;
+  margin-top: 34px;
+  width: 280px;
+  height: 68px;
+  border: 5px solid #111;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, #52d968 0%, #2b8a3e 100%);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow:
+    0 9px 0 #145c25,
+    0 14px 0 #000;
+  text-transform: uppercase;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    filter 0.1s ease;
+}
+
+.play-button:hover {
+  filter: brightness(1.08);
+}
+
+.play-button:active {
+  transform: translateY(7px);
+  box-shadow:
+    0 2px 0 #145c25,
+    0 6px 0 #000;
+}
+
+.controls {
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
+  margin-bottom: 0;
+  color: #555;
+  font-weight: 700;
+}
+
+/* ========================= */
+/* ÁREA DO JOGO */
+/* ========================= */
+
+#gameScreen {
+  position: relative;
+}
+
+.game-area {
+  position: relative;
+  height: 330px;
+  width: 100%;
+  overflow: hidden;
+  border: 5px solid #050505;
+  border-radius: 22px;
+  background-color: #111;
+  background-image:
+    url("assets/background.png"),
+    linear-gradient(#111, #1c1f25);
+  background-repeat: repeat-x, no-repeat;
+  background-size: auto 100%, cover;
+  image-rendering: pixelated;
+  user-select: none;
+  touch-action: manipulation;
+  box-shadow:
+    0 12px 0 #000,
+    0 0 35px rgba(0,0,0,0.55);
+  transition:
+    filter 0.25s ease-in-out,
+    background-color 0.25s ease-in-out;
+}
+
+/* FLASH DE FASE */
+
+.game-area.phase-flash {
+  filter: brightness(0);
+}
+
+/* FASES */
+
+.game-area.phase-1 {
+  background-color: #111;
+  background-image:
+    url("assets/bg-phase-1.png"),
+    linear-gradient(#111, #1c1f25);
+  background-repeat: repeat-x, no-repeat;
+  background-size: auto 100%, cover;
+}
+
+.game-area.phase-2 {
+  background-color: #111;
+  background-image:
+    url("assets/bg-phase-2.png"),
+    linear-gradient(#111, #1c1f25);
+  background-repeat: repeat-x, no-repeat;
+  background-size: auto 100%, cover;
+}
+
+.game-area.phase-3 {
+  background-color: #111;
+  background-image:
+    url("assets/bg-phase-3.png"),
+    linear-gradient(#111, #1c1f25);
+  background-repeat: repeat-x, no-repeat;
+  background-size: auto 100%, cover;
+}
+
+/* ========================= */
+/* HUD */
+/* ========================= */
+
+.hud {
+  position: absolute;
+  z-index: 20;
+  top: 14px;
+  right: 16px;
+  display: flex;
+  gap: 12px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.94);
+  border: 4px solid #111;
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-weight: 900;
+  box-shadow: 0 5px 0 #000;
+}
+
+.start-message {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  font-size: 38px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow:
+    3px 3px 0 #111,
+    5px 5px 0 rgba(0,0,0,0.45);
+  opacity: 1;
+  transition: opacity 0.4s;
+  text-transform: uppercase;
+}
+
+.start-message.hidden {
+  opacity: 0;
+}
+
+/* ========================= */
+/* PERSONAGEM E OBSTÁCULOS */
+/* ========================= */
+
+.dino {
+  position: absolute;
+  left: 80px;
+  bottom: var(--dino-bottom);
+  width: 64px;
+  height: 64px;
+  z-index: 5;
+}
+
+.dino img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+}
+
+.obstacle {
+  position: absolute;
+  bottom: var(--obstacle-bottom);
+  z-index: 4;
+}
+
+.obstacle img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+}
+
+/* ========================= */
+/* CHÃO */
+/* ========================= */
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ground-height);
+  background-color: #6f573f;
+  background-image: url("assets/ground.png");
+  background-repeat: repeat-x;
+  background-size: auto var(--ground-height);
+  border-top: 3px solid #3b2f25;
+  z-index: 6;
+}
+
+/* ========================= */
+/* MODAL FINAL */
+/* ========================= */
+
+.end-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+}
+
+.end-modal.active {
+  display: flex;
+}
+
+.end-box {
+  width: min(430px, 90vw);
+  background:
+    linear-gradient(180deg, #ffffff 0%, #e9e9e9 100%);
+  border: 5px solid #111;
+  border-radius: 26px;
+  padding: 32px;
+  text-align: center;
+  box-shadow:
+    0 12px 0 #000,
+    0 0 35px rgba(0,0,0,0.5);
+}
+
+.end-box h2 {
+  margin-top: 0;
+  font-size: 38px;
+  text-transform: uppercase;
+  color: #111;
+  text-shadow: 3px 3px 0 #d6d6d6;
+}
+
+.end-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.end-actions button {
+  border: 4px solid #111;
+  border-radius: 14px;
+  padding: 13px 24px;
+  font-weight: 900;
+  font-size: 16px;
+  cursor: pointer;
+  background: #e9e9e9;
+  box-shadow: 0 5px 0 #111;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    filter 0.1s ease;
+}
+
+.end-actions button:hover {
+  filter: brightness(1.05);
+}
+
+.end-actions button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #111;
+}
+
+.end-actions button:first-child {
+  background:
+    linear-gradient(180deg, #52d968 0%, #2b8a3e 100%);
+  color: #fff;
+}
+
+/* ========================= */
+/* RESPONSIVO */
+/* ========================= */
+
+@media (max-width: 700px) {
+  .page {
+    width: min(95vw, 960px);
+  }
+
+  .menu-panel {
+    padding: 24px;
+    border-radius: 22px;
+  }
+
+  h1 {
+    font-size: 36px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .admin-button {
+    top: 10px;
+    right: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .admin-panel {
+    top: 48px;
+    right: 10px;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .skins {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .skin-card {
+    height: 112px;
+  }
+
+  .play-button {
+    width: 230px;
+    height: 60px;
+    font-size: 23px;
+  }
+
+  .game-area {
+    height: 300px;
+  }
+
+  .hud {
+    top: 10px;
+    right: 10px;
+    font-size: 15px;
+    gap: 8px;
+    padding: 7px 10px;
+  }
+
+  .start-message {
+    font-size: 28px;
+  }
+
+  .dino {
+    left: 55px;
+    width: 58px;
+    height: 58px;
+  }
+}
