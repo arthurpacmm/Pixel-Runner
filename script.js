@@ -30,7 +30,6 @@ const adminStatus = document.getElementById("adminStatus");
 const adminControls = document.getElementById("adminControls");
 const adminStartScoreInput = document.getElementById("adminStartScore");
 
-const STORAGE_RECORD = "pixel_runner_record";
 const STORAGE_HISTORY = "pixel_runner_history";
 
 const ADMIN_CODE = "MCM2C";
@@ -39,6 +38,7 @@ const GROUND_HEIGHT = 28;
 
 let adminUnlocked = false;
 let sessionBestScore = 0;
+let recordScore = 0;
 let selectedSkin = "default";
 
 const skins = {
@@ -112,11 +112,11 @@ let game = {
 };
 
 function getRecord() {
-  return Number(localStorage.getItem(STORAGE_RECORD)) || 0;
+  return recordScore;
 }
 
 function setRecord(value) {
-  localStorage.setItem(STORAGE_RECORD, String(value));
+  recordScore = value;
 }
 
 function getHistory() {
