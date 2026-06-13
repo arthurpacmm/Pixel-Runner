@@ -41,7 +41,6 @@ let adminUnlocked = false;
 let sessionBestScore = 0;
 let selectedSkin = "default";
 
-// Configuração das skins
 const skins = {
   default: {
     name: "Tiranossauro",
@@ -120,8 +119,6 @@ function setRecord(value) {
   localStorage.setItem(STORAGE_RECORD, String(value));
 }
 
-// Histórico usando sessionStorage.
-// Isso faz o histórico resetar quando a aba/página for fechada.
 function getHistory() {
   try {
     return JSON.parse(sessionStorage.getItem(STORAGE_HISTORY)) || [];

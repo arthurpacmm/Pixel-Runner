@@ -42,10 +42,6 @@ body {
   display: block;
 }
 
-/* ========================= */
-/* MENU */
-/* ========================= */
-
 .menu-panel {
   position: relative;
   overflow: hidden;
@@ -210,10 +206,6 @@ h1 {
   font-weight: 900;
 }
 
-/* ========================= */
-/* MODO ADM */
-/* ========================= */
-
 .admin-button {
   position: absolute;
   top: 16px;
@@ -313,10 +305,6 @@ h1 {
   color: #111;
 }
 
-/* ========================= */
-/* HISTÓRICO */
-/* ========================= */
-
 .history-scroll {
   max-height: 250px;
   overflow-y: auto;
@@ -354,10 +342,6 @@ h1 {
   font-weight: 800;
   color: #333;
 }
-
-/* ========================= */
-/* BOTÃO PLAY */
-/* ========================= */
 
 .play-button {
   position: relative;
@@ -404,10 +388,6 @@ h1 {
   font-weight: 700;
 }
 
-/* ========================= */
-/* ÁREA DO JOGO */
-/* ========================= */
-
 #gameScreen {
   position: relative;
 }
@@ -436,13 +416,9 @@ h1 {
     background-color 0.25s ease-in-out;
 }
 
-/* FLASH DE FASE */
-
 .game-area.phase-flash {
   filter: brightness(0);
 }
-
-/* FASES */
 
 .game-area.phase-1 {
   background-color: #111;
@@ -470,10 +446,6 @@ h1 {
   background-repeat: repeat-x, no-repeat;
   background-size: auto 100%, cover;
 }
-
-/* ========================= */
-/* HUD */
-/* ========================= */
 
 .hud {
   position: absolute;
@@ -512,10 +484,6 @@ h1 {
   opacity: 0;
 }
 
-/* ========================= */
-/* PERSONAGEM E OBSTÁCULOS */
-/* ========================= */
-
 .dino {
   position: absolute;
   left: 80px;
@@ -547,10 +515,6 @@ h1 {
   display: block;
 }
 
-/* ========================= */
-/* CHÃO */
-/* ========================= */
-
 .ground {
   position: absolute;
   left: 0;
@@ -564,10 +528,6 @@ h1 {
   border-top: 3px solid #3b2f25;
   z-index: 6;
 }
-
-/* ========================= */
-/* MODAL FINAL */
-/* ========================= */
 
 .end-modal {
   display: none;
@@ -641,10 +601,6 @@ h1 {
     linear-gradient(180deg, #52d968 0%, #2b8a3e 100%);
   color: #fff;
 }
-
-/* ========================= */
-/* RESPONSIVO */
-/* ========================= */
 
 @media (max-width: 700px) {
   .page {
