@@ -30,16 +30,25 @@ const adminStatus = document.getElementById("adminStatus");
 const adminControls = document.getElementById("adminControls");
 const adminStartScoreInput = document.getElementById("adminStartScore");
 
-const STORAGE_HISTORY = "pixel_runner_history";
-
 const ADMIN_CODE = "MCM2C";
 
 const GROUND_HEIGHT = 28;
+
+const BASE_SPEED = 520;
+const SCORE_SPEED_BONUS = 650;
+const TIME_SPEED_BONUS = 180;
+const SCORE_FOR_MAX_SPEED = 40000;
+const TIME_FOR_MAX_SPEED = 120;
+
+// Limpa dados antigos que podem ter ficado salvos de versões anteriores
+localStorage.removeItem("pixel_runner_record");
+sessionStorage.removeItem("pixel_runner_history");
 
 let adminUnlocked = false;
 let sessionBestScore = 0;
 let recordScore = 0;
 let selectedSkin = "default";
+let historyScores = [];
 
 const skins = {
   default: {
@@ -92,7 +101,7 @@ let game = {
   running: false,
   won: false,
   score: 0,
-  speed: 350,
+  speed: BASE_SPEED,
   elapsedTime: 0,
   y: 0,
   velocityY: 0,
@@ -120,15 +129,11 @@ function setRecord(value) {
 }
 
 function getHistory() {
-  try {
-    return JSON.parse(sessionStorage.getItem(STORAGE_HISTORY)) || [];
-  } catch {
-    return [];
-  }
+  return historyScores;
 }
 
 function setHistory(history) {
-  sessionStorage.setItem(STORAGE_HISTORY, JSON.stringify(history));
+  historyScores = history;
 }
 
 function saveRound(score) {
@@ -285,7 +290,7 @@ function clearObstacles() {
 function pauseObstacles(duration = 1250) {
   clearObstacles();
   game.obstaclePauseUntil = performance.now() + duration;
-  game.distanceUntilNextObstacle = 820;
+  game.distanceUntilNextObstacle = getNextObstacleDistance();
 }
 
 dinoImage.onload = () => {
@@ -361,14 +366,14 @@ function startGame() {
   game.running = true;
   game.won = false;
   game.score = initialScore;
-  game.speed = 350;
+  game.speed = getSpeedByScore(initialScore);
   game.elapsedTime = 0;
   game.y = 0;
   game.velocityY = 0;
   game.onGround = true;
   game.obstacles = [];
   game.lastTime = performance.now();
-  game.distanceUntilNextObstacle = 720;
+  game.distanceUntilNextObstacle = getNextObstacleDistance();
   game.obstaclePauseUntil = 0;
   game.groundOffset = 0;
   game.bgOffset = 0;
@@ -422,10 +427,17 @@ function updateScore(deltaTime) {
 function updateSpeed(deltaTime) {
   game.elapsedTime += deltaTime / 1000;
 
-  const scoreProgress = Math.min(1, game.score / 50000);
-  const timeProgress = Math.min(1, game.elapsedTime / 180);
+  const scoreSpeed = getSpeedByScore(game.score);
+  const timeProgress = Math.min(1, game.elapsedTime / TIME_FOR_MAX_SPEED);
+  const timeBonus = timeProgress * TIME_SPEED_BONUS;
 
-  game.speed = 350 + scoreProgress * 350 + timeProgress * 90;
+  game.speed = scoreSpeed + timeBonus;
+}
+
+function getSpeedByScore(score) {
+  const scoreProgress = Math.min(1, score / SCORE_FOR_MAX_SPEED);
+
+  return BASE_SPEED + scoreProgress * SCORE_SPEED_BONUS;
 }
 
 function updateHud() {
@@ -482,7 +494,7 @@ function updateDinoAnimation(now) {
     return;
   }
 
-  const animationSpeed = Math.max(60, 125 - (game.speed - 350) * 0.09);
+  const animationSpeed = Math.max(45, 110 - (game.speed - BASE_SPEED) * 0.06);
 
   if (now - game.lastFrameChange > animationSpeed) {
     game.currentFrame = game.currentFrame === 0 ? 1 : 0;
@@ -524,12 +536,18 @@ function updateObstacles(deltaTime, now) {
 }
 
 function getNextObstacleDistance() {
-  const speedProgress = Math.min(1, Math.max(0, (game.speed - 350) / 440));
+  const roll = Math.random();
+  let timeGap;
 
-  const minDistance = 440 + speedProgress * 340;
-  const maxDistance = 740 + speedProgress * 500;
+  if (roll < 0.25) {
+    timeGap = random(0.55, 0.85);
+  } else if (roll < 0.75) {
+    timeGap = random(0.85, 1.45);
+  } else {
+    timeGap = random(1.45, 2.25);
+  }
 
-  return random(minDistance, maxDistance);
+  return game.speed * timeGap;
 }
 
 function createObstacle() {
